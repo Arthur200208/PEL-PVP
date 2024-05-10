@@ -52,7 +52,7 @@ If you encounter any issues or want to contribute to the project, feel free to o
 
 ## Citation
 
-If you use our PEL-PVP model in your research, please cite our paper:
+If you use our PEL-PVP model [here](http://121.36.197.223:8080/py/PEL-PVP.pt) in your research, please cite our paper:
 
 [Paper Title] - [Link to the Paper]
 
