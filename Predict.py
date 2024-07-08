@@ -6,47 +6,26 @@ from tqdm import tqdm
 import esm
 import torch
 from MyPeft import getMyPeftModel
-from index import sensitivity, specificity, auc, mcc, accuracy, precision, recall, f1, AUPRC
 from utils import xcl
 
-metrics_dict = {"sensitivity": sensitivity,
-                "specificity": specificity,
-                "accuracy": accuracy,
-                "mcc": mcc,
-                "auc": auc,
-                "precision": precision,
-                "recall": recall,
-                "f1": f1,
-                "AUPRC": AUPRC}
 
 def read_protein_sequences(file):
-    '''
-    读取FASTA格式的蛋白质序列文件，并将其转换为字符串
-    :param file: 蛋白质序列文件
-    :return: 蛋白质序列，字符串
-    '''
+
     with open(file) as f:
         data = f.read()
-    # 检查文件是否为FASTA格式
+
     if re.search('>', data) == None:
         print("Please input correct FASTA format protein sequence！！！")
     else:
-        # 将文件中的每一行按照>分割，并将每一行拆分为字符串
         records = data.split('>')[1:]
         sequences = []
         sequence_name = []
-        # 遍历每一行
         for fasta in records:
             array = fasta.split('\n')
-            # 将每一行以\n分割，并将每一行拆分为字符串
             header, sequence = array[0], re.sub('[^ACDEFGHIKLMNPQRSTVWY-]', '-', ''.join(array[1:]).upper())
-            # 将每一行的头部信息存入字符串
             name = header
-            # 将每一行的序列信息存入字符串
             sequences.append(sequence)
-            # 将每一行的序列信息存入字符串
             sequence_name.append(name)
-        # 返回字符串
         return sequences, sequence_name
 
 
@@ -82,7 +61,7 @@ def predict(net, test_data, alphabet, sq_list, sequence_name):
             result[i] = (sq_list[i], "Vacuolar Protein")
         else:
             result[i] = (sq_list[i], "Non Vacuolar Protein")
-    print("处理完成", flush=True)
+    print("Sucess!", flush=True)
 
     df = pd.DataFrame(result, columns=['Protein Sequence', 'Y/N'])
     df.to_csv('result/output.csv', index=True)
@@ -91,7 +70,7 @@ def predict(net, test_data, alphabet, sq_list, sequence_name):
 
 
 if __name__ == '__main__':
-    # 设置seed
+    # seed
     SEED = 2024
     np.random.seed(SEED)
     torch.manual_seed(SEED)
@@ -101,6 +80,6 @@ if __name__ == '__main__':
     peft_esm2 = getMyPeftModel(esm2, r=4, a=4, dropout=0.3, m=5)
 
     peft_esm2.load_state_dict(torch.load("PEL-PVP.pt"))
-    test_batch, sq_list, sequence_name = preparePredictData("testdata.fasta", batch_size=1)
+    test_batch, sq_list, sequence_name = preparePredictData("data.fasta", batch_size=1)
 
     predict(peft_esm2, test_batch, alphabet, sq_list, sequence_name)

@@ -44,7 +44,27 @@ pip install tqdm==4.65.0
 pip install fair-esm==2.0.0
 ```
 
+## Running
 
+（1）Predict
+
+​		1，Download the PEL-PVP model [here](http://121.36.197.223:8080/py/PEL-PVP.pt) and put it in the main directory ;
+
+​		2，Input data（fasta）into data.fasta
+
+​		3，Changing working dir to PEL-PVP, and then running the following command:
+
+​				python Predict.py
+
+（2）Train
+
+​		1，set the modelname, dataset in train-main.py
+
+​		2,  Changing working dir to PEL-PVP, and then running the following command:
+
+​				python train-main.py
+
+​		
 
 ## Contribution and Issue Feedback
 
